@@ -45,3 +45,4 @@ next-env.d.ts
 
 # kubernetes secrets
 k8s/secret.yaml
+k8s/chart/values.yaml

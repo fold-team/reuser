@@ -17,10 +17,16 @@ manifests:
     - k8s/postgres-pvc.yaml
     - k8s/postgres.yaml
     - k8s/db-migration-job.yaml
-    - k8s/app-deployment.yaml
-    - k8s/app-service.yaml
 deploy:
   kubectl: {}
+  helm:
+    releases:
+    - name: reuser
+      chartPath: k8s/chart
+      valuesFiles:
+      - k8s/chart/values.yaml
+      artifactOverrides:
+        image: reuser
   statusCheckDeadlineSeconds: 300
 portForward:
   - resourceType: service
@@ -43,6 +49,14 @@ profiles:
                 dest: /app/src
     deploy:
       kubectl: {}
+      helm:
+        releases:
+        - name: reuser
+          chartPath: k8s/chart
+          valuesFiles:
+          - k8s/chart/values.yaml
+          artifactOverrides:
+            image: reuser
   - name: prod
     activation:
       - command: run
@@ -55,3 +69,11 @@ profiles:
         push: true
     deploy:
       kubectl: {}
+      helm:
+        releases:
+        - name: reuser
+          chartPath: k8s/chart
+          valuesFiles:
+          - k8s/chart/values.yaml
+          artifactOverrides:
+            image: reuser

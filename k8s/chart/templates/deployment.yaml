@@ -19,7 +19,7 @@ spec:
           command: ['sh', '-c', 'until nc -z postgres.reuser.svc.cluster.local 5432; do echo waiting for postgres; sleep 2; done;']
       containers:
         - name: reuser-app
-          image: reuser:latest
+          image: {{ .Values.image }}
           ports:
             - containerPort: 3000
           env:
