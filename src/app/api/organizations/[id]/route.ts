@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
@@ -15,7 +15,7 @@ export async function GET(
     if (!organization) {
       return NextResponse.json(
         { error: "Organization not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -24,7 +24,7 @@ export async function GET(
     console.error("Error fetching organization:", error);
     return NextResponse.json(
       { error: "Failed to fetch organization" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

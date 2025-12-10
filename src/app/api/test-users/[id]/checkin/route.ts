@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
@@ -22,7 +22,7 @@ export async function POST(
     console.error("Error checking in test user:", error);
     return NextResponse.json(
       { error: "Failed to check in test user" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

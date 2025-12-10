@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: reuser
+data:
+  POSTGRES_DB: reuser
+  POSTGRES_HOST: postgres.reuser.svc.cluster.local
+  POSTGRES_PORT: "5432"
+  NODE_ENV: production

@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import CopyButton from "@/Components/CopyButton";
-import { Button } from "@/Components/ui/button";
+import CopyButton from "@/components/CopyButton";
+import { Button } from "@/components/ui/button";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import {
@@ -14,7 +14,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/Components/ui/table";
+} from "@/components/ui/table";
 import {
   Card,
   CardAction,
@@ -22,9 +22,13 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/Components/ui/card";
-import { TestUserActionsMenu } from "@/Components/TestUserActionsMenu";
-import { DropdownMenuGroup, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
+} from "@/components/ui/card";
+import { TestUserActionsMenu } from "@/components/TestUserActionsMenu";
+import {
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
 
 interface TestUserModel {
   id: string;
@@ -54,7 +58,7 @@ interface User {
   organizationId: string;
 }
 
-export default function Dashboard() {
+function DashboardContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const orgId = searchParams.get("orgId");
@@ -65,7 +69,7 @@ export default function Dashboard() {
     useState<Organization | null>(null);
   const [testUsers, setTestUsers] = useState<TestUserModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [showCreateForm, setShowCreateForm] = useState<'edit' | 'create'>();
+  const [showCreateForm, setShowCreateForm] = useState<"edit" | "create">();
   const [showCreateOrgForm, setShowCreateOrgForm] = useState(false);
   const [testUserModel, setTestUserModel] = useState<TestUser>({
     id: "",
@@ -157,7 +161,14 @@ export default function Dashboard() {
         body: JSON.stringify(testUserModel),
       });
       if (response.ok) {
-        setTestUserModel({ id: "", firstName: "", lastName: "", email: "", password: "", description: "" });
+        setTestUserModel({
+          id: "",
+          firstName: "",
+          lastName: "",
+          email: "",
+          password: "",
+          description: "",
+        });
         setShowCreateForm(undefined);
         fetchTestUsers();
       }
@@ -181,7 +192,14 @@ export default function Dashboard() {
       });
 
       if (response.ok) {
-        setTestUserModel({ id: "", firstName: "", lastName: "", email: "", password: "", description: "" });
+        setTestUserModel({
+          id: "",
+          firstName: "",
+          lastName: "",
+          email: "",
+          password: "",
+          description: "",
+        });
         setShowCreateForm(undefined);
         fetchTestUsers();
       }
@@ -259,7 +277,7 @@ export default function Dashboard() {
       password: user.password,
       description: user.description ?? "",
     });
-    setShowCreateForm('edit');
+    setShowCreateForm("edit");
   };
 
   const handleDeleteUser = async (userId: string) => {
@@ -401,10 +419,14 @@ export default function Dashboard() {
         {showCreateForm !== undefined && (
           <div className="bg-white rounded-lg shadow p-6 mb-8">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              {showCreateForm === 'edit' ? "Edit Test User" : "Create Test User"}
+              {showCreateForm === "edit"
+                ? "Edit Test User"
+                : "Create Test User"}
             </h2>
             <form
-              onSubmit={showCreateForm === 'edit' ? handleUpdateUser : handleCreateUser }
+              onSubmit={
+                showCreateForm === "edit" ? handleUpdateUser : handleCreateUser
+              }
               className="grid grid-cols-1 md:grid-cols-2 gap-4"
             >
               <div>
@@ -415,7 +437,10 @@ export default function Dashboard() {
                   type="text"
                   value={testUserModel.firstName}
                   onChange={(e) =>
-                    setTestUserModel({ ...testUserModel, firstName: e.target.value })
+                    setTestUserModel({
+                      ...testUserModel,
+                      firstName: e.target.value,
+                    })
                   }
                   required
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
@@ -429,7 +454,10 @@ export default function Dashboard() {
                   type="text"
                   value={testUserModel.lastName}
                   onChange={(e) =>
-                    setTestUserModel({ ...testUserModel, lastName: e.target.value })
+                    setTestUserModel({
+                      ...testUserModel,
+                      lastName: e.target.value,
+                    })
                   }
                   required
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
@@ -443,7 +471,10 @@ export default function Dashboard() {
                   type="email"
                   value={testUserModel.email}
                   onChange={(e) =>
-                    setTestUserModel({ ...testUserModel, email: e.target.value })
+                    setTestUserModel({
+                      ...testUserModel,
+                      email: e.target.value,
+                    })
                   }
                   required
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
@@ -457,7 +488,10 @@ export default function Dashboard() {
                   type="password"
                   value={testUserModel.password}
                   onChange={(e) =>
-                    setTestUserModel({ ...testUserModel, password: e.target.value })
+                    setTestUserModel({
+                      ...testUserModel,
+                      password: e.target.value,
+                    })
                   }
                   required
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
@@ -465,12 +499,18 @@ export default function Dashboard() {
               </div>
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Description <span className="text-xs text-gray-500">(Markdown supported)</span>
+                  Description{" "}
+                  <span className="text-xs text-gray-500">
+                    (Markdown supported)
+                  </span>
                 </label>
                 <textarea
                   value={testUserModel.description ?? ""}
                   onChange={(e) =>
-                    setTestUserModel({ ...testUserModel, description: e.target.value as string })
+                    setTestUserModel({
+                      ...testUserModel,
+                      description: e.target.value as string,
+                    })
                   }
                   className="w-full dark:text-white px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 resize-none font-mono text-sm"
                   rows={6}
@@ -482,7 +522,7 @@ export default function Dashboard() {
                   type="submit"
                   className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md"
                 >
-                  {showCreateForm === 'edit' ? "Update User" : "Create User"}
+                  {showCreateForm === "edit" ? "Update User" : "Create User"}
                 </button>
               </div>
             </form>
@@ -501,11 +541,13 @@ export default function Dashboard() {
               <Button
                 size={"sm"}
                 onClick={() => {
-                  console.log('showCreateForm', showCreateForm);
-                  setShowCreateForm(showCreateForm === undefined ? 'create' : undefined)
+                  console.log("showCreateForm", showCreateForm);
+                  setShowCreateForm(
+                    showCreateForm === undefined ? "create" : undefined,
+                  );
                 }}
               >
-                {showCreateForm === undefined ? "Add Test User" : "Cancel" }
+                {showCreateForm === undefined ? "Add Test User" : "Cancel"}
               </Button>
             </CardAction>
           </CardHeader>
@@ -603,20 +645,62 @@ export default function Dashboard() {
                             <ReactMarkdown
                               remarkPlugins={[remarkGfm]}
                               components={{
-                                h1: ({ children }) => <h1 className="m-0 mb-1 last:mb-0">{children}</h1>,
-                                h2: ({ children }) => <h2 className="m-0 mb-1 last:mb-0">{children}</h2>,
-                                h3: ({ children }) => <h3 className="m-0 mb-1 last:mb-0">{children}</h3>,
-                                h4: ({ children }) => <h4 className="m-0 mb-1 last:mb-0">{children}</h4>,
-                                h5: ({ children }) => <h5 className="m-0 mb-1 last:mb-0">{children}</h5>,
-                                h6: ({ children }) => <h6 className="m-0 mb-1 last:mb-0">{children}</h6>,
-                                p: ({ children }) => <p className="m-0 mb-1 last:mb-0">{children}</p>,
-                                ul: ({ children }) => <ul className="m-0 mb-1 list-none last:mb-0">{children}</ul>,
-                                ol: ({ children }) => <ol className="m-0 mb-1 last:mb-0 pl-4">{children}</ol>,
+                                h1: ({ children }) => (
+                                  <h1 className="m-0 mb-1 last:mb-0">
+                                    {children}
+                                  </h1>
+                                ),
+                                h2: ({ children }) => (
+                                  <h2 className="m-0 mb-1 last:mb-0">
+                                    {children}
+                                  </h2>
+                                ),
+                                h3: ({ children }) => (
+                                  <h3 className="m-0 mb-1 last:mb-0">
+                                    {children}
+                                  </h3>
+                                ),
+                                h4: ({ children }) => (
+                                  <h4 className="m-0 mb-1 last:mb-0">
+                                    {children}
+                                  </h4>
+                                ),
+                                h5: ({ children }) => (
+                                  <h5 className="m-0 mb-1 last:mb-0">
+                                    {children}
+                                  </h5>
+                                ),
+                                h6: ({ children }) => (
+                                  <h6 className="m-0 mb-1 last:mb-0">
+                                    {children}
+                                  </h6>
+                                ),
+                                p: ({ children }) => (
+                                  <p className="m-0 mb-1 last:mb-0">
+                                    {children}
+                                  </p>
+                                ),
+                                ul: ({ children }) => (
+                                  <ul className="m-0 mb-1 list-none last:mb-0">
+                                    {children}
+                                  </ul>
+                                ),
+                                ol: ({ children }) => (
+                                  <ol className="m-0 mb-1 last:mb-0 pl-4">
+                                    {children}
+                                  </ol>
+                                ),
                                 li: (props: any) => {
                                   const { checked, children } = props;
-                                  if (checked !== null && checked !== undefined) {
+                                  if (
+                                    checked !== null &&
+                                    checked !== undefined
+                                  ) {
                                     return (
-                                      <li style={{ listStyleType: 'none' }} className="my-0 list-none flex items-start">
+                                      <li
+                                        style={{ listStyleType: "none" }}
+                                        className="my-0 list-none flex items-start"
+                                      >
                                         <input
                                           type="checkbox"
                                           checked={checked}
@@ -624,13 +708,15 @@ export default function Dashboard() {
                                           className="mr-2 mt-0.5"
                                           disabled
                                         />
-                                        <span className="flex-1">{children}</span>
+                                        <span className="flex-1">
+                                          {children}
+                                        </span>
                                       </li>
                                     );
                                   }
                                   return <li className="my-0">{children}</li>;
                                 },
-                                
+
                                 code: ({ children }) => (
                                   <code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-xs font-mono">
                                     {children}
@@ -665,11 +751,16 @@ export default function Dashboard() {
                           )}
                           <TestUserActionsMenu>
                             <DropdownMenuGroup>
-                              <DropdownMenuItem onClick={() => handleEditUser(user.id)}>
+                              <DropdownMenuItem
+                                onClick={() => handleEditUser(user.id)}
+                              >
                                 Edit
                               </DropdownMenuItem>
                               <DropdownMenuSeparator />
-                              <DropdownMenuItem className="text-red-500" onClick={() => handleDeleteUser(user.id)}>
+                              <DropdownMenuItem
+                                className="text-red-500"
+                                onClick={() => handleDeleteUser(user.id)}
+                              >
                                 Delete
                               </DropdownMenuItem>
                             </DropdownMenuGroup>
@@ -685,5 +776,13 @@ export default function Dashboard() {
         </Card>
       </div>
     </div>
+  );
+}
+
+export default function Dashboard() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <DashboardContent />
+    </Suspense>
   );
 }

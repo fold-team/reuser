@@ -1,0 +1,58 @@
+apiVersion: skaffold/v4beta11
+kind: Config
+metadata:
+  name: reuser
+build:
+  artifacts:
+    - image: reuser
+      docker:
+        dockerfile: Dockerfile
+  local:
+    push: false
+    useBuildkit: true
+manifests:
+  rawYaml:
+    - k8s/namespace.yaml
+    - k8s/configmap.yaml
+    - k8s/secret.yaml
+    - k8s/postgres-pvc.yaml
+    - k8s/postgres.yaml
+    - k8s/db-migration-job.yaml
+    - k8s/app-deployment.yaml
+    - k8s/app-service.yaml
+deploy:
+  kubectl: {}
+  statusCheckDeadlineSeconds: 300
+portForward:
+  - resourceType: service
+    resourceName: reuser-app
+    namespace: reuser
+    port: 80
+    localPort: 3000
+profiles:
+  - name: dev
+    activation:
+      - command: dev
+    build:
+      artifacts:
+        - image: reuser
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+              - src: 'src/**/*.{ts,tsx,js,jsx}'
+                dest: /app/src
+    deploy:
+      kubectl: {}
+  - name: prod
+    activation:
+      - command: run
+    build:
+      artifacts:
+        - image: reuser
+          docker:
+            dockerfile: Dockerfile
+      local:
+        push: true
+    deploy:
+      kubectl: {}
