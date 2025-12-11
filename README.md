@@ -24,12 +24,29 @@ Change DATABASE_URL to your postgres url
 > bun start
 ```
 
+## Running with Skaffold (Kubernetes)
+
+Prerequisites:
+- Kubernetes cluster (Minikube, Docker Desktop, Kind, etc.)
+- Skaffold installed
+
+First, create the values configuration:
+```bash
+cp k8s/chart/values.example.yaml k8s/chart/values.yaml
+```
+
+### Development Mode
+Runs the application in development mode with hot-reloading enabled.
+
+```bash
+skaffold dev
+```
+
+### Production Mode
+Builds and runs the optimized production image using the `production` profile.
+
+```bash
+skaffold run -p production
+```
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-
-Update this application so we can run it in a remote cluster with `skaffold dev`.
-
-Requirements:
-* Create a skaffold config file
-* Create a k8s folder with all necessary configs
-* Include a postgres instance that stores state in a pvc in the k8s config
