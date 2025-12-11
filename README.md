@@ -17,4 +17,11 @@ Change DATABASE_URL to your postgres url
 > bun run dev
 ```
 
+### Production build
+
+```bash
+> bun run build
+> bun start
+```
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

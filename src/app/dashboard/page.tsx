@@ -22,13 +22,9 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { TestUserActionsMenu } from "@/components/TestUserActionsMenu";
-import {
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
+} from "@/Components/ui/card";
+import { TestUserActionsMenu } from "@/Components/TestUserActionsMenu";
+import { DropdownMenuGroup, DropdownMenuItem, DropdownMenuSeparator } from "@/Components/ui/dropdown-menu";
 
 interface TestUserModel {
   id: string;
@@ -781,7 +777,7 @@ function DashboardContent() {
 
 export default function Dashboard() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
       <DashboardContent />
     </Suspense>
   );
