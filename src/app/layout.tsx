@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Suspense } from "react";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
 
@@ -30,7 +29,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Suspense fallback={<div className="h-16 bg-white border-b border-gray-200"></div>}>
+        <Suspense
+          fallback={
+            <div className="h-16 bg-white border-b border-gray-200"></div>
+          }
+        >
           <Navigation />
         </Suspense>
         {children}

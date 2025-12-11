@@ -1,4 +1,4 @@
-import { Button } from "@/Components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,15 +12,19 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@/Components/ui/dropdown-menu"
-import { Ellipsis } from "lucide-react"
+} from "@/components/ui/dropdown-menu";
+import { Ellipsis } from "lucide-react";
 
-export function TestUserActionsMenu({ children }: { children: React.ReactNode }) {
+export function TestUserActionsMenu({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="icon">
-            <Ellipsis className="w-4 h-4" />
+          <Ellipsis className="w-4 h-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end">
@@ -74,5 +78,5 @@ export function TestUserActionsMenu({ children }: { children: React.ReactNode })
         </DropdownMenuItem> */}
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }
