@@ -19,8 +19,12 @@ build:
       - src: 'public/**/*'
         dest: .
 manifests:
-  rawYaml:
-  - k8s/*.yaml
+  helm:
+    releases:
+    - name: reuser
+      chartPath: k8s/chart
+      valuesFiles:
+      - k8s/chart/values.yaml
 portForward:
 - resourceType: service
   resourceName: reuser
