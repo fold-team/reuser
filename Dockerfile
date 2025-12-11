@@ -21,7 +21,12 @@ RUN \
     echo "Lockfile not found." && exit 1; \
   fi
 
-# Stage 2: Builder
+# Stage 2: Development
+FROM deps AS dev
+COPY . .
+CMD ["sh", "-c", "npx prisma generate && npm run dev"]
+
+# Stage 3: Builder
 FROM node:20-alpine AS builder
 WORKDIR /app
 

@@ -1,79 +1,28 @@
-apiVersion: skaffold/v4beta11
+apiVersion: skaffold/v4beta3
 kind: Config
 metadata:
   name: reuser
 build:
   artifacts:
-    - image: reuser
-      docker:
-        dockerfile: Dockerfile
-  local:
-    useBuildkit: true
+  - image: reuser
+    docker:
+      dockerfile: Dockerfile
+      target: dev
+    sync:
+      manual:
+      - src: 'src/**/*.ts'
+        dest: .
+      - src: 'src/**/*.tsx'
+        dest: .
+      - src: 'src/**/*.css'
+        dest: .
+      - src: 'public/**/*'
+        dest: .
 manifests:
   rawYaml:
-    - k8s/namespace.yaml
-    - k8s/configmap.yaml
-    - k8s/secret.yaml
-    - k8s/postgres-pvc.yaml
-    - k8s/postgres.yaml
-    - k8s/db-migration-job.yaml
-deploy:
-  kubectl: {}
-  helm:
-    releases:
-    - name: reuser
-      chartPath: k8s/chart
-      valuesFiles:
-      - k8s/chart/values.yaml
-      artifactOverrides:
-        image: reuser
-  statusCheckDeadlineSeconds: 300
+  - k8s/*.yaml
 portForward:
-  - resourceType: service
-    resourceName: reuser-app
-    namespace: reuser
-    port: 80
-    localPort: 3000
-profiles:
-  - name: dev
-    activation:
-      - command: dev
-    build:
-      artifacts:
-        - image: reuser
-          docker:
-            dockerfile: Dockerfile
-          sync:
-            manual:
-              - src: 'src/**/*.{ts,tsx,js,jsx}'
-                dest: /app/src
-    deploy:
-      kubectl: {}
-      helm:
-        releases:
-        - name: reuser
-          chartPath: k8s/chart
-          valuesFiles:
-          - k8s/chart/values.yaml
-          artifactOverrides:
-            image: reuser
-  - name: prod
-    activation:
-      - command: run
-    build:
-      artifacts:
-        - image: reuser
-          docker:
-            dockerfile: Dockerfile
-      local:
-        push: true
-    deploy:
-      kubectl: {}
-      helm:
-        releases:
-        - name: reuser
-          chartPath: k8s/chart
-          valuesFiles:
-          - k8s/chart/values.yaml
-          artifactOverrides:
-            image: reuser
+- resourceType: service
+  resourceName: reuser
+  port: 3000
+  localPort: 3000

@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reuser
+spec:
+  selector:
+    matchLabels:
+      app: reuser
+  template:
+    metadata:
+      labels:
+        app: reuser
+    spec:
+      initContainers:
+      - name: init-db
+        image: reuser
+        command: ["npx", "prisma", "migrate", "deploy"]
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://postgres:postgres@postgres:5432/reuser?schema=public"
+      containers:
+      - name: reuser
+        image: reuser
+        ports:
+        - containerPort: 3000
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://postgres:postgres@postgres:5432/reuser?schema=public"
+        - name: HOSTNAME
+          value: "0.0.0.0"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: reuser
+spec:
+  type: ClusterIP
+  ports:
+  - port: 3000
+  selector:
+    app: reuser

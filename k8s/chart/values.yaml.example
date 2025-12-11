@@ -1,4 +1,0 @@
-image: reuser
-ingress:
-  host: HOSTNAME
-  annotations:
