@@ -66,9 +66,13 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
 
 # Copy migration script
 COPY --from=builder /app/package.json ./package.json
+
+# Install dependencies needed for prisma migrate in init container
+RUN npm install prisma dotenv
 
 RUN chown -R nextjs:nodejs /app
 

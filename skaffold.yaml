@@ -30,3 +30,12 @@ portForward:
   resourceName: reuser
   port: 3000
   localPort: 3000
+
+profiles:
+- name: production
+  build:
+    artifacts:
+    - image: reuser
+      docker:
+        dockerfile: Dockerfile
+        target: runner
