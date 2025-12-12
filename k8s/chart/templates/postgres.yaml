@@ -35,8 +35,9 @@ spec:
         - name: POSTGRES_DB
           value: "reuser"
         volumeMounts:
-        - mountPath: /var/lib/postgresql
+        - mountPath: /var/lib/postgresql/data
           name: postgres-storage
+          subPath: pgdata
       volumes:
       - name: postgres-storage
         persistentVolumeClaim:
